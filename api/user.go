@@ -11,7 +11,8 @@ func register(c *gin.Context) {
 	password := c.PostForm("password")
 	question := c.PostForm("question")
 	answer := c.PostForm("answer")
-	if dao.SearchUser(username) {
+	flag := dao.SearchUser(username)
+	if flag {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status":  500,
 			"message": "user already exists"})
@@ -27,7 +28,8 @@ func register(c *gin.Context) {
 func login(c *gin.Context) {
 	username := c.PostForm("username")
 	password := c.PostForm("password")
-	if !dao.SearchUser(username) {
+	flag := dao.SearchUser(username)
+	if !flag {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status":  500,
 			"message": "user doesn't exists"})
@@ -48,7 +50,7 @@ func login(c *gin.Context) {
 }
 func searchpassword(c *gin.Context) {
 	username := c.PostForm("username")
-	if dao.SearchUser(username) {
+	if !dao.SearchUser(username) {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status":  500,
 			"message": "user already exists"})

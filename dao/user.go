@@ -1,46 +1,52 @@
 package dao
 
-var User map[string]map[string]string
-
-func InitMap() {
-	User = make(map[string]map[string]string)
+var user = map[string]string{
+	"lsx":    "123456",
+	"hiahia": "654321",
 }
-func Adduser(username, password, question, answer string) {
-	User[username]["username"] = username
-	User[username]["password"] = password
-	User[username]["question"] = question
-	User[username]["answer"] = answer
+var question = map[string]string{
+	"lsx":    "输入1",
+	"hiahia": "aa",
+}
+var answer = map[string]string{
+	"lsx":    "1",
+	"hiahia": "aa",
+}
+
+func Adduser(username, password, question1, answer1 string) {
+	user[username] = password
+	question[username] = question1
+	answer[username] = answer1
 
 }
 
 func SearchUser(username string) bool {
-	if User[username][username] == "" {
+	if user[username] == "" {
 		return false
 	}
 	return true
 }
 
 func Searchpassword(username string) string {
-	return User[username]["password"]
+	return user[username]
 }
 func Change(username, password string) {
-	User[username]["password"] = password
+	user[username] = password
 }
 
-func Check(username, answer string) bool {
-	if User[username]["answer"] == answer {
+func Check(username, answer1 string) bool {
+	if answer[username] == answer1 {
 		return true
 	}
 	return false
 }
 
 func Searchquestion(username string) string {
-	return User[username]["question"]
+	return question[username]
 }
 
 func Delate(username string) {
-	delete(User, User[username]["username"])
-	delete(User, User[username]["password"])
-	delete(User, User[username]["question"])
-	delete(User, User[username]["answer"])
+	delete(user, user[username])
+	delete(question, question[username])
+	delete(answer, answer[username])
 }
