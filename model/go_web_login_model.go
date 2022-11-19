@@ -1,8 +1,13 @@
 package model
 
+import "github.com/jinzhu/gorm"
+
 type User struct {
-	username string
-	password string
-	problem  string
-	answer   string
+	Id       int    `gorm:"id"`
+	Name     string `gorm:"name"`
+	Password string `gorm:"password"`
+	Problem  string `gorm:"problem"`
+	Answer   string `gorm:"answer"`
 }
+
+var DB *gorm.DB

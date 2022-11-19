@@ -3,39 +3,43 @@ package api
 import (
 	"github.com/gin-gonic/gin"
 	"go_web_login/dao"
+	"go_web_login/model"
 	"net/http"
 )
 
 func register(c *gin.Context) {
-	username := c.PostForm("username")
-	password := c.PostForm("password")
-	question := c.PostForm("question")
-	answer := c.PostForm("answer")
-	flag := dao.SearchUser(username)
-	if flag {
+	u := model.User{}
+	u.Name = c.PostForm("username")
+	u.Password = c.PostForm("password")
+	u.Problem = c.PostForm("question")
+	u.Answer = c.PostForm("answer")
+	flag := dao.SearchUser(&u)
+	if !flag {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status":  500,
 			"message": "user already exists"})
 		return
 	}
-	dao.Adduser(username, password, question, answer)
+	dao.Adduser(&u)
 	c.JSON(http.StatusOK, gin.H{
 		"status":  200,
 		"message": "add user successful",
 	})
+
 }
 
 func login(c *gin.Context) {
-	username := c.PostForm("username")
-	password := c.PostForm("password")
-	flag := dao.SearchUser(username)
-	if !flag {
+	u := model.User{}
+	u.Name = c.PostForm("username")
+	u.Password = c.PostForm("password")
+	flag := dao.SearchUser(&u)
+	if flag {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status":  500,
 			"message": "user doesn't exists"})
 		return
 	}
-	if dao.Searchpassword(username) != password {
+	if dao.Searchpassword(&u) != u.Password {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status":  500,
 			"message": "wrong password",
@@ -49,19 +53,20 @@ func login(c *gin.Context) {
 	})
 }
 func searchpassword(c *gin.Context) {
-	username := c.PostForm("username")
-	if !dao.SearchUser(username) {
+	u := model.User{}
+	u.Name = c.PostForm("username")
+	if dao.SearchUser(&u) {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status":  500,
-			"message": "user already exists"})
+			"message": "user doesn't exists"})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"status":  200,
-		"message": dao.Searchquestion(username),
+		"message": dao.Searchquestion(&u),
 	})
-	answer := c.PostForm("answer")
-	if !dao.Check(username, answer) {
+	u.Answer = c.PostForm("answer")
+	if !dao.Check(&u, u.Answer) {
 		c.JSON(http.StatusOK, gin.H{
 			"status":  200,
 			"message": "wrong answer",
@@ -70,27 +75,28 @@ func searchpassword(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"status":  200,
-		"message": dao.Searchpassword(username),
+		"message": dao.Searchpassword(&u),
 	})
 }
 func change(c *gin.Context) {
-	username := c.PostForm("username")
-	password := c.PostForm("password")
+	u := model.User{}
+	u.Name = c.PostForm("username")
+	u.Password = c.PostForm("password")
 	newpassword := c.PostForm("newpassword")
-	if !dao.SearchUser(username) {
+	if dao.SearchUser(&u) {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status":  500,
 			"message": "user doesn't exists"})
 		return
 	}
-	if dao.Searchpassword(username) != password {
+	if dao.Searchpassword(&u) != u.Password {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status":  500,
 			"message": "wrong password",
 		})
 		return
 	}
-	dao.Change(username, newpassword)
+	dao.Change(&u, newpassword)
 	c.JSON(http.StatusOK, gin.H{
 		"status":  200,
 		"message": "change successful",
@@ -98,22 +104,23 @@ func change(c *gin.Context) {
 }
 
 func delate(c *gin.Context) {
-	username := c.PostForm("username")
-	password := c.PostForm("password")
-	if !dao.SearchUser(username) {
+	u := model.User{}
+	u.Name = c.PostForm("username")
+	u.Password = c.PostForm("password")
+	if dao.SearchUser(&u) {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status":  500,
 			"message": "user doesn't exists"})
 		return
 	}
-	if dao.Searchpassword(username) != password {
+	if dao.Searchpassword(&u) != u.Password {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status":  500,
 			"message": "wrong password",
 		})
 		return
 	}
-	dao.Delate(username)
+	dao.Delate(&u)
 	c.JSON(http.StatusOK, gin.H{
 		"status":  200,
 		"message": "delete successful",
