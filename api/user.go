@@ -142,7 +142,8 @@ func thumb(c *gin.Context) {
 				"message": "user doesn't exists"})
 			return
 		}
-
+		userimformation := dao.UserDatebaseMysql(u.Name)
+		dao.UserDatebaseRedis(userimformation, context.Background()) //先查询redis，redis中无则查询mysql，同时将mysql中值放入redis
 	}
 	flag2, _ := dao.Hgethallcheck(context.Background(), articlename, article)
 	if !flag2 {

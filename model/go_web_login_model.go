@@ -22,3 +22,8 @@ type RedisSet struct {
 	Conn    *redis.Client
 	Context context.Context
 }
+type Article struct {
+	Id     int    `gorm:"id"`
+	Writer string `gorm:"writer"`
+	Like   int    `gorm:"like"`
+}

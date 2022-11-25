@@ -59,8 +59,8 @@ func Hgethallcheck(ctx context.Context, key1 string, key2 string) (bool, error) 
 	}
 	return true, nil
 } //检验用户信息是否存在redis
-func UserDatebaseRedis(user model.User, id int64, ctx context.Context) {
-	Sadd("username", id) //先放一个搜索用的？
+func UserDatebaseRedis(user model.User, ctx context.Context) {
+	Sadd("username", int64(user.Id)) //先放一个搜索用的？
 	userimformation := UserDatebaseMysql(user.Name)
 	map1 := map[string]string{
 		"name":     userimformation.Name,
