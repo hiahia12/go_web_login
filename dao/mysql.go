@@ -6,19 +6,6 @@ import (
 	"go_web_login/model"
 )
 
-//var user = map[string]string{
-//	"lsx":    "123456",
-//	"hiahia": "654321",
-//}
-//var question = map[string]string{
-//	"lsx":    "输入1",
-//	"hiahia": "aa",
-//}
-//var answer = map[string]string{
-//	"lsx":    "1",
-//	"hiahia": "aa",
-//}
-
 func Adduser(u *model.User) {
 	model.DB.Save(u)
 }
@@ -70,4 +57,9 @@ func Init() {
 	db.SingularTable(true)
 	db.AutoMigrate(&model.User{})
 	model.DB = db
+}
+func UserDatebaseMysql(username string) model.User {
+	var t = model.User{}
+	model.DB.Where("name=?", username).Debug().First(&t)
+	return t
 }

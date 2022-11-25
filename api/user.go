@@ -1,6 +1,7 @@
 package api
 
 import (
+	"context"
 	"github.com/gin-gonic/gin"
 	"go_web_login/dao"
 	"go_web_login/model"
@@ -125,4 +126,33 @@ func delate(c *gin.Context) {
 		"status":  200,
 		"message": "delete successful",
 	})
+}
+func thumb(c *gin.Context) {
+	user := "user"
+	articlename := "article"
+	u := model.User{}
+	u.Name = c.PostForm("username")
+	u.Password = c.PostForm("password")
+	article := c.PostForm("article")
+	flag1, _ := dao.Hgethallcheck(context.Background(), user, u.Name)
+	if !flag1 {
+		if dao.SearchUser(&u) {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"status":  500,
+				"message": "user doesn't exists"})
+			return
+		}
+
+	}
+	flag2, _ := dao.Hgethallcheck(context.Background(), articlename, article)
+	if !flag2 {
+		if dao.SearchUser(&u) {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"status":  500,
+				"message": "article doesn't exists"})
+			return
+		}
+
+	}
+
 }

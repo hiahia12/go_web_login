@@ -1,6 +1,13 @@
 package model
 
-import "github.com/jinzhu/gorm"
+import (
+	"context"
+	"github.com/go-redis/redis/v8"
+	"github.com/jinzhu/gorm"
+)
+
+var DB *gorm.DB
+var Rdb *redis.Client
 
 type User struct {
 	Id       int    `gorm:"id"`
@@ -9,5 +16,9 @@ type User struct {
 	Problem  string `gorm:"problem"`
 	Answer   string `gorm:"answer"`
 }
-
-var DB *gorm.DB
+type RedisSet struct {
+	Id      int64
+	Object  string
+	Conn    *redis.Client
+	Context context.Context
+}
