@@ -8,6 +8,7 @@ import (
 
 var DB *gorm.DB
 var Rdb *redis.Client
+var D *gorm.DB
 
 type User struct {
 	Id       int    `gorm:"id"`
@@ -24,6 +25,7 @@ type RedisSet struct {
 }
 type Article struct {
 	Id     int    `gorm:"id"`
+	Word   string `gorm:"word"`
 	Writer string `gorm:"writer"`
 	Like   int    `gorm:"like"`
 }

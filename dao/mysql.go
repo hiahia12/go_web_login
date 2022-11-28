@@ -9,7 +9,9 @@ import (
 func Adduser(u *model.User) {
 	model.DB.Save(u)
 }
-
+func Addarticle(u *model.Article) {
+	model.D.Save(u)
+}
 func SearchUser(u *model.User) bool {
 	var t = model.User{}
 	model.DB.Where("name=?", u.Name).Debug().First(&t)
@@ -57,9 +59,16 @@ func Init() {
 	db.SingularTable(true)
 	db.AutoMigrate(&model.User{})
 	model.DB = db
+	db.AutoMigrate(&model.Article{})
+	model.D = db
 }
 func UserDatebaseMysql(username string) model.User {
 	var t = model.User{}
 	model.DB.Where("name=?", username).Debug().First(&t)
 	return t
-}
+} //已排查，无问题
+func ArticleDatabaseMysql(articleid int) model.Article {
+	var t = model.Article{}
+	model.D.Where("id=?", articleid).Debug().First(&t)
+	return t
+} //已排查，暂无问题？
